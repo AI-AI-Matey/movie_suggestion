@@ -13,7 +13,7 @@ import pickle
 import Flask
 
 # Read data from file:
-with open("movie_embeddings_dict.pkl", 'rb') as f:
+with open("movie_sugg_model/movie_embeddings_dict.pkl", 'rb') as f:
     movie_embeddings_dict = pickle.load(f)
 
 
