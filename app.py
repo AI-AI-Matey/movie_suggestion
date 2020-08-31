@@ -54,19 +54,9 @@ def predict():
     INP_MOVIE = data["movie"]
     output_val = ("*****\nInput Movie:\n", INP_MOVIE, 
       "\n*****\nThe Movies you may like\n\n", "\n".join(get_similars(INP_MOVIE, movie_embeddings_dict)))
-
-#     # convert data into dataframe
-#     data.update((x, [y]) for x, y in data.items())
-#     data_df = pd.DataFrame.from_dict(data)
-
-#     # predictions
-#     result = model.predict(data_df)
-
     # send back to browser
-    output = {'results': output_val}
-
     # return data
-    return jsonify(results=output)
+    return jsonify(results=output_val)
 
 if __name__ == '__main__':
     app.run(port = 5000, debug=True)
