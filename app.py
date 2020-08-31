@@ -58,10 +58,10 @@ def predict():
     # return data
     return jsonify(results=output_val)
 
-@app.route('/<INP_MOVIE>')
-def predict_movie_browser(INP_MOVIE):
-    output_val = ("*****\nInput Movie:\n", INP_MOVIE, 
-      "\n*****\nThe Movies you may like\n\n", "\n".join(get_similars(INP_MOVIE, movie_embeddings_dict)))
+@app.route('/movie/<INPMOVIE>')
+def predict_movie_browser(INPMOVIE):
+    output_val = ("*****\nInput Movie:\n", INPMOVIE, 
+      "\n*****\nThe Movies you may like\n\n", "\n".join(get_similars(INPMOVIE, movie_embeddings_dict)))
     # send back to browser
     # return data
     return output_val
