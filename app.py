@@ -10,7 +10,7 @@ import re
 import sklearn
 from sklearn.metrics.pairwise import cosine_similarity
 import pickle
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, render_template
 
 # Read data from file:
 with open("movie_sugg_model/movie_embeddings_dict.pkl", 'rb') as f:
@@ -57,6 +57,10 @@ def predict():
     # send back to browser
     # return data
     return jsonify(results=output_val)
+
+@app.route('/')
+def index():
+    return render_template('index.html')
 
 if __name__ == '__main__':
     app.run(port = 5000, debug=True)
