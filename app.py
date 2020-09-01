@@ -29,14 +29,15 @@ def get_similars(inp_name, dict_to_consider):
         TOP_N = 20
         def make_score_simpler(score):
             deci_to_perc = score * 100
-            round_off = int(round(deci_to_perc, 0))
+            round_off = int(round(deci_to_perc, 1))
             str_val = str(round_off)+"%"
             return str_val
         top_n_ind = cos_sim_res[0].argsort()[-TOP_N:]
-        top_n_similarities = [(make_score_simpler(cos_sim_res[0][ind]), key_) for ind, key_ in enumerate(dict_keys) if ind in top_n_ind]
+        top_n_similarities = [(cos_sim_res[0][ind], key_) for ind, key_ in enumerate(dict_keys) if ind in top_n_ind]
     
         top_n_similarities = sorted(top_n_similarities, reverse = True)
-        return top_n_similarities
+        str_parsed_out = [(make_score_simpler(score), name) for score, name in top_n_similarities]
+        return str_parsed_out
     except:
         return None
 
