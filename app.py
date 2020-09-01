@@ -1,9 +1,3 @@
-
-# coding: utf-8
-
-# In[8]:
-
-
 import pandas as pd
 import numpy as np
 import re
@@ -40,30 +34,8 @@ def get_similars(inp_name, dict_to_consider):
     except:
         return None
 
-# In[6]:
-
-
-################ MOVIE RESULTS ################
-
-
-# In[7]:
-
-
 # app
 app = Flask(__name__)
-
-# routes
-# @app.route('/', methods=['POST'])
-# def predict():
-#     # get data
-#     data = request.get_json(force=True)
-    
-#     INP_MOVIE = data["movie"]
-#     output_val = ("*****\nInput Movie:\n", INP_MOVIE, 
-#       "\n*****\nThe Movies you may like\n\n", "\n".join(get_similars(INP_MOVIE, movie_embeddings_dict)))
-#     # send back to browser
-#     # return data
-#     return jsonify(results=output_val)
 
 @app.route('/movie/<name>')
 def suggest_sim_movie(name):
