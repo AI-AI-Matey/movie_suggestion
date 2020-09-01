@@ -15,23 +15,30 @@ from flask import Flask, request, jsonify, render_template
 # Read data from file:
 with open("movie_sugg_model/movie_embeddings_dict.pkl", 'rb') as f:
     movie_embeddings_dict = pickle.load(f)
+all_movie_names = movie_embeddings_dict.keys()
 
+with open("movie_sugg_model/cast_embeddings_dict.pkl", 'rb') as f:
+    cast_emb_dict = pickle.load(f)
+all_cast_names = cast_emb_dict.keys()
 
-# In[5]:
-
+# All required Functions
+def get_did_you_mean(inp_str, name_list_to_check):
+    return [ent for ent in name_list_to_check if re.search(inp_str, ent, re.IGNORECASE)]
 
 def get_similars(inp_name, dict_to_consider):
-    inp_name_vec = dict_to_consider[inp_name]
-    cos_sim_res = cosine_similarity([inp_name_vec], list(dict_to_consider.values()))
-    
-    dict_keys = list(dict_to_consider.keys())
-    
-    TOP_N = 20
-    top_n_ind = cos_sim_res[0].argsort()[-TOP_N:]
-    top_n_similarities = [key_ for ind, key_ in enumerate(dict_keys) if ind in top_n_ind]
-    top_n_similarities.reverse()
-    return top_n_similarities
+    try:
+        inp_name_vec = dict_to_consider[inp_name]
+        cos_sim_res = cosine_similarity([inp_name_vec], list(dict_to_consider.values()))
 
+        dict_keys = list(dict_to_consider.keys())
+
+        TOP_N = 20
+        top_n_ind = cos_sim_res[0].argsort()[-TOP_N:]
+        top_n_similarities = [key_ for ind, key_ in enumerate(dict_keys) if ind in top_n_ind]
+        top_n_similarities.reverse()
+        return top_n_similarities
+    except:
+        return None
 
 # In[6]:
 
@@ -46,28 +53,47 @@ def get_similars(inp_name, dict_to_consider):
 app = Flask(__name__)
 
 # routes
-@app.route('/', methods=['POST'])
-def predict():
-    # get data
-    data = request.get_json(force=True)
+# @app.route('/', methods=['POST'])
+# def predict():
+#     # get data
+#     data = request.get_json(force=True)
     
-    INP_MOVIE = data["movie"]
-    output_val = ("*****\nInput Movie:\n", INP_MOVIE, 
-      "\n*****\nThe Movies you may like\n\n", "\n".join(get_similars(INP_MOVIE, movie_embeddings_dict)))
-    # send back to browser
-    # return data
-    return jsonify(results=output_val)
+#     INP_MOVIE = data["movie"]
+#     output_val = ("*****\nInput Movie:\n", INP_MOVIE, 
+#       "\n*****\nThe Movies you may like\n\n", "\n".join(get_similars(INP_MOVIE, movie_embeddings_dict)))
+#     # send back to browser
+#     # return data
+#     return jsonify(results=output_val)
 
 @app.route('/movie/<name>')
-def predict_movie_browser(name):
-    try:
-        output_val = ("*****\nInput Movie:\n", name, 
-          "\n*****\nThe Movies you may like\n\n", "\n".join(get_similars(name, movie_embeddings_dict)))
-        # send back to browser
-        # return data
-        return jsonify(results=output_val)
-    except:
-        return "Error here"
+def suggest_sim_movie(name):
+    output_val =  {"input": None, 
+                   "suggestion": None,
+                   "did_you_mean": None
+                  }
+    similars_ = get_similars(name, movie_embeddings_dict)
+    if similars_:
+        output_val["input"] = name
+        output_val["suggestion"] = similars_
+    else:        
+        did_you_mean = get_did_you_mean(inp_str = name, name_list_to_check = all_movie_names)
+        output_val["did_you_mean"] = did_you_mean
+    return jsonify(results=output_val)
+
+@app.route('/cast/<name>')
+def suggest_sim_cast(name):
+    output_val =  {"input": None, 
+                   "suggestion": None,
+                   "did_you_mean": None
+                  }
+    similars_ = get_similars(name, cast_emb_dict)
+    if similars_:
+        output_val["input"] = name
+        output_val["suggestion"] = similars_
+    else:        
+        did_you_mean = get_did_you_mean(inp_str = name, name_list_to_check = all_cast_names)
+        output_val["did_you_mean"] = did_you_mean
+    return jsonify(results=output_val)
 
 @app.route('/')
 def index():
