@@ -28,7 +28,7 @@ def get_similars(inp_name, dict_to_consider):
 
         TOP_N = 20
         top_n_ind = cos_sim_res[0].argsort()[-TOP_N:]
-        top_n_similarities = [(cos_sim_res[0][ind], key_) for ind, key_ in enumerate(dict_keys) if ind in top_n_ind]
+        top_n_similarities = [(str(cos_sim_res[0][ind]), key_) for ind, key_ in enumerate(dict_keys) if ind in top_n_ind]
     
         top_n_similarities = sorted(top_n_similarities, reverse = True)
         return top_n_similarities
