@@ -36,6 +36,7 @@ def get_similars(inp_name, dict_to_consider):
 
 # app
 app = Flask(__name__)
+app.config['JSONIFY_PRETTYPRINT_REGULAR'] = True
 
 @app.route('/movie/<name>')
 def suggest_sim_movie(name):
