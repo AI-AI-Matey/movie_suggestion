@@ -34,7 +34,7 @@ def get_top_indices(x: list, TOP_N: int):
 
 def get_similar_items(query_name: str, vector_dict: dict, TOP_N=20)-> list:
     """
-    """
+    Slice TOP N similar vectors and its keys"""
 
     query_vec = get_vector(name=query_name, vector_dict=vector_dict)
 
@@ -48,7 +48,7 @@ def get_similar_items(query_name: str, vector_dict: dict, TOP_N=20)-> list:
     logging.debug(top_n_ind)
 
     top_n_similarities = [key_ for ind, key_ in enumerate(dict_keys) if ind in top_n_ind]
-    top_n_scores = cos_sim_res[top_n_ind]
+    top_n_scores = cos_sim_res[top_n_ind].tolist()
 
     out = list(zip(top_n_scores, top_n_similarities))
 

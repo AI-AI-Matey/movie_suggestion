@@ -12,7 +12,7 @@ with open("backend/src/movie_embeddings_dict.pkl", 'rb') as f:
 
 all_movie_names = movie_embeddings_dict.keys()
 
-with open("movie_sugg_model/cast_embeddings_dict.pkl", 'rb') as f:
+with open("backend/src/cast_embeddings_dict.pkl", 'rb') as f:
     cast_emb_dict = pickle.load(f)
 
 all_cast_names = cast_emb_dict.keys()
@@ -21,16 +21,20 @@ all_cast_names = cast_emb_dict.keys()
 app = Flask(__name__)
 app.config['JSONIFY_PRETTYPRINT_REGULAR'] = True
 
-output_dict =  {"input": None, 
-                "suggestion": None,
-                "did_you_mean": None
-                }
+def get_default_output():
+
+    return {"input": None,
+            "suggestion": None,
+            "did_you_mean": None
+            }
 
 
 # API Routes
 @app.route('/movie/<name>')
-def suggest_sim_movie(name, output_dict=output_dict):
+def suggest_sim_movie(name):
     
+    output_dict = get_default_output()
+
     try:
         similars_ = get_similar_items(query_name=name, vector_dict=movie_embeddings_dict)
     
@@ -50,8 +54,10 @@ def suggest_sim_movie(name, output_dict=output_dict):
     
 
 @app.route('/cast/<name>')
-def suggest_sim_cast(name, output_dict=output_dict):
+def suggest_sim_cast(name):
     
+    output_dict = get_default_output()
+
     try:
         similars_ = get_similar_items(query_name=name, vector_dict=cast_emb_dict)
     
