@@ -1,4 +1,4 @@
-movies_sugg_model/wiki_movie_plots.csv
-movies_sugg_model/glove.6B.100d.txt
-movie_sugg_model/.ipynb_checkpoints/
-./.DS_Store
+../wiki_movie_plots.csv
+../glove.6B.100d.txt
+../.ipynb_checkpoints/
+../.DS_Store
